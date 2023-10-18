@@ -2,25 +2,25 @@
 
 /**
  *_eputs - Prints a given string
- * @strg: String to printe.
+ * @str: String to printe.
  *
  * Return: None
  */
-void _eputs(char *strg)
+void _eputs(char *str)
 {
 	int k = 0;
 
-	if (!strg)
+	if (!str)
 		return;
-	while (strg[k] != '\0')
+	while (str[k] != '\0')
 	{
-		_eputchar(strg[k]);
+		_eputchar(str[k]);
 		k++;
 	}
 }
 
 /**
- * _eputchar - Outputs a character c to stderr
+ * _eputchar - Outputs a character to stderr
  * @p: Character to print
  *
  * Return: 1 on success, -1 on error with errno set.
@@ -44,19 +44,19 @@ int _eputchar(char p)
 /**
  * _putfd - Outputs a string to a specified fid
  * @p: Character to print
- * @fid: File descriptor to write to.
+ * @fd: File descriptor to write to.
  *
  * Return: 1 on success, -1 on error with errno set.
  */
 
-int _putfd(char p, int fid)
+int _putfd(char p, int fd)
 {
 	static int k;
 	static char buff[WRITE_BUFF_SIZE];
 
 	if (p == BUFF_FLUSH || k >= WRITE_BUFF_SIZE)
 	{
-		write(fid, buff, k);
+		write(fd, buff, k);
 		k = 0;
 	}
 	if (p != BUFF_FLUSH)
@@ -66,20 +66,20 @@ int _putfd(char p, int fid)
 
 /**
  *_putsfd - prints an input string
- * @strg: the string to be printed
- * @fid: File descriptor to write to.
+ * @str: the string to be printed
+ * @fd: File descriptor to write to.
  *
  * Return: Number of characters printed.
  */
-int _putsfd(char *strg, int fid)
+int _putsfd(char *str, int fd)
 {
 	int k = 0;
 
-	if (!strg)
+	if (!str)
 		return (0);
-	while (*strg)
+	while (*str)
 	{
-		k += _putfd(*strg++, fid);
+		k += _putfd(*str++, fd);
 	}
 	return (k);
 }

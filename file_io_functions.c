@@ -2,16 +2,16 @@
 
 /**
  * get_history_file - Retrieves the history file
- * @cmdInfo: Pointer to the parameter structure
+ * @info: Pointer to the parameter structure
  *
  * Return: Pointer to the allocated history file string.
  */
 
-char *get_history_file(cmdInfo_t *cmdInfo)
+char *get_history_file(info_t *info)
 {
 	char *buff, *direc;
 
-	direc = _getenv(cmdInfo, "HOME=");
+	direc = _getenv(info, "HOME=");
 	if (!direc)
 		return (NULL);
 	buff = malloc(sizeof(char) * (_strlen(direc) + _strlen(HIST_FILE) + 2));
@@ -26,24 +26,24 @@ char *get_history_file(cmdInfo_t *cmdInfo)
 
 /**
  * write_history - Write or append to a file.
- * @cmdInfo: Pointer to  the parameter structure
+ * @info: Pointer to  the parameter structure
  *
  * Return: 1 on success, -1 otherwise.
  */
-int write_history(cmdInfo_t *cmdInfo)
+int write_history(info_t *info)
 {
 	ssize_t fid;
-	char *filenam = get_history_file(cmdInfo);
-	list_t *nod = NULL;
+	char *filename = get_history_file(info);
+	list_t *node = NULL;
 
 	if (!filenam)
 		return (-1);
 
-	fid = open(filenam, O_CREAT | O_TRUNC | O_RDWR, 0644);
-	free(filenam);
+	fid = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	free(filename);
 	if (fid == -1)
 		return (-1);
-	for (nod = cmdInfo->history; nod; nod = nod->next)
+	for (node = info->history; node; node = node->next)
 	{
 		_putsfid(nod->str, fid);
 		_putfid('\n', fid);
@@ -55,17 +55,17 @@ int write_history(cmdInfo_t *cmdInfo)
 
 /**
  * read_history - Reads command  history froma  file.
- * @cmdInfo: Pointer to  the parameter struct.
+ * @info: Pointer to  the parameter struct.
  *
  * Return: Histcount on success, 0 otherwise.
  */
 
-int read_history(cmdInfo_t *cmdInfo)
+int read_history(info_t *info)
 {
 	int k, las = 0, licount = 0;
 	ssize_t fid, readlen, fisize = 0;
 	struct stat sta;
-	char *buff = NULL, *filenam = get_history_file(mdInfo);
+	char *buff = NULL, *filenam = get_history_file(info);
 
 	if (!filenam)
 		return (0);
@@ -90,57 +90,57 @@ int read_history(cmdInfo_t *cmdInfo)
 		if (buff[k] == '\n')
 		{
 			buff[k] = 0;
-			build_history_list(cmdInfo, buff + las, licount++);
+			build_history_list(info, buff + las, licount++);
 			las = k + 1;
 		}
 	if (las != k)
-		build_history_list(cmdInfo, buff + las, licount++);
+		build_history_list(info, buff + las, licount++);
 	free(buff);
-	cmdInfo->histcount = linecount;
-	while (cmdInfo->histcount-- >= HIST_MAX)
-		delete_nod_at_index(&(cmdInfo->history), 0);
-	renumber_history(cmdInfo);
-	return (cmdInfo->histcount);
+	info->histcount = linecount;
+	while (info->histcount-- >= HIST_MAX)
+		delete_node_at_index(&(info->history), 0);
+	renumber_history(info);
+	return (info->histcount);
 }
 
 /**
  * build_history_list - Adds an entry to a history linked list.
- * @cmdInfo: Pointer to the parameter structure.
+ * @info: Pointer to the parameter structure.
  * @buff: Input buffer.
  * @licount: History linecount.
  *
  * Return: Always 0
  */
 
-int build_history_list(cmdInfo_t *cmdInfo, char *buff, int licount)
+int build_history_list(info_t *info, char *buff, int licount)
 {
-	list_t *nod = NULL;
+	list_t *node = NULL;
 
-	if (cmdInfo->history)
-		nod = cmdInfo->history;
-	add_nod_end(&nod, buff, licount);
+	if (info->history)
+		node = info->history;
+	add_node_end(&node, buff, licount);
 
-	if (!cmdInfo->history)
-		cmdInfo->history = nod;
+	if (!info->history)
+		info->history = node;
 	return (0);
 }
 
 /**
  * renumber_history - Renumbers the history list after modification.
- * @cmdInfo: Pointer to the parameter Structure.
+ * @info: Pointer to the parameter Structure.
  *
  * Return: Update histcount
  */
 
-int renumber_history(cmdInfo_t *cmdInfo)
+int renumber_history(info_t *info)
 {
-	list_t *nod = cmdInfo->history;
+	list_t *node = info->history;
 	int K = 0;
 
-	while (nod)
+	while (node)
 	{
-		nod->numb = i++;
-		nod = nod->next;
+		node->numb = i++;
+		node = node->next;
 	}
-	return (cmdInfo->histcount = k);
+	return (info->histcount = k);
 }

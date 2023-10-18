@@ -2,63 +2,63 @@
 
 /**
  * get_environ - Retrieves a copy of the environment string array.
- * @cmdInfo: Command Structure
+ * @info: Command Structure
  * Return: Always 0
  */
-char **get_environ(cmdInfo_t *cmdInfo)
+char **get_environ(info_t *info)
 {
-	if (!cmdInfo->environ || cmdInfo->env_changed)
+	if (!info->environ || info->env_changed)
 	{
-		cmdInfo->environ = list_to_strings(cmdInfo->env);
-		cmdInfo->env_changed = 0;
+		info->environ = list_to_strings(info->env);
+		info->env_changed = 0;
 	}
 
-	return (cmdInfo->environ);
+	return (info->environ);
 }
 
 /**
  * _unsetenv - Deletes an environment variable
- * @cmdInfo: Command structure.
+ * @info: Command structure.
  * @vars: Evironment variables property.
  *  Return: 1 if deleted, 0 otherwise
- *  nde: node
+ *  node: node
  */
-int _unsetenv(cmdInfo_t *cmdInfo, char *vars)
+int _unsetenv(info_t *info, char *vars)
 {
-	list_t *nde = cmdInfo->env;
+	list_t *node = info->env;
 	size_t k = 0;
 	char *a;
 
-	if (!nde || !vars)
+	if (!node || !vars)
 		return (0);
 
-	while (nde)
+	while (node)
 	{
-		a = starts_with(nde->str, vars);
+		a = starts_with(node->str, vars);
 		if (a && *a == '=')
 		{
-			cmdInfo->env_changed = delete_node_at_index(&(cmdInfo->env), K);
+			info->env_changed = delete_node_at_index(&(info->env), K);
 			K = 0;
-			nde = cmdInfo->env;
+			node = info->env;
 			continue;
 		}
-		nde = nde->next;
+		node = node->next;
 		k++;
 	}
-	return (cmdInfo->env_changed);
+	return (info->env_changed);
 }
 
 /**
  * _setenv - Creates or updates an environement variable.
- * @cmdInfo: Command Structure
+ * @info: Command Structure
  * @vars: Environement variable property
  * @val: Value for the environment variable.
  *  Return: Always 0
  */
-int _setenv(cmdInfo_t *cmdInfo, char *vars, char *val)
+int _setenv(Info_t *info, char *vars, char *val)
 {
 	char *buff = NULL;
-	list_t *nde;
+	list_t *node;
 	char *a;
 
 	if (!vars || !val)
@@ -70,21 +70,21 @@ int _setenv(cmdInfo_t *cmdInfo, char *vars, char *val)
 	_strcpy(buff, vars);
 	_strcat(buff, "=");
 	_strcat(buff, val);
-	nde = cmdInfo->env;
-	while (nde)
+	node = Info->env;
+	while (node)
 	{
-		a = starts_with(nde->str, vars);
+		a = starts_with(node->str, vars);
 		if (a && *a == '=')
 		{
-			free(nde->str);
-			nde->str = buff;
-			cmdInfo->env_changed = 1;
+			free(node->str);
+			node->str = buff;
+			info->env_changed = 1;
 			return (0);
 		}
-		nde = nde->next;
+		node = node->next;
 	}
-	add_node_end(&(cmdInfo->env), buff, 0);
+	add_node_end(&(info->env), buff, 0);
 	free(buff);
-	cmdInfo->env_changed = 1;
+	info->env_changed = 1;
 	return (0);
 }
