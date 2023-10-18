@@ -36,30 +36,30 @@ void ffree(char **ss)
 /**
  * _realloc - Reallocates a memory block to a new size.
  * @pt: Pointer to the previously allocated block.
- * @od_size: Size of the previous block in bytes.
- * @nw_size: Size of the new block in bytes.
+ * @old_size: Size of the previous block in bytes.
+ * @new_size: Size of the new block in bytes.
  *
  * Return: Pointer to the reallocated block.
  */
 
-void *_realloc(void *pt, unsigned int od_size, unsigned int nw_size)
+void *_realloc(void *pt, unsigned int old_size, unsigned int new_size)
 {
 	char *a;
 
 	if (!pt)
 		return (malloc(nw_size));
-	if (!nw_size)
+	if (!new_size)
 		return (free(pt), NULL);
-	if (nw_size == od_size)
+	if (enw_size == od_size)
 		return (pt);
 
 	a = malloc(nw_size);
 	if (!a)
 		return (NULL);
 
-	od_size = od_size < nw_size ? od_size : nw_size;
-	while (od_size--)
-		a[od_size] = ((char *)pt)[od_size];
+	old_size = old_size < new_size ? old_size : new_size;
+	while (old_size--)
+		a[old_size] = ((char *)pt)[old_size];
 	free(pt);
 	return (a);
 }

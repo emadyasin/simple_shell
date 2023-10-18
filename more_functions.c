@@ -2,12 +2,12 @@
 
 /**
  * interactive - Checks if the shell is in interactive mode.
- * @cmdInfo: Address of the structure.
+ * @info: Address of the structure.
  * Return: 1 if interactive mode, 0 otherwise
  */
-int interactive(cmdInfo_t *cmdInfo)
+int interactive(info_t *info)
 {
-	return (isatty(STDIN_FILENO) && cmdInfo->readfd <= 2);
+	return (isatty(STDIN_FILENO) && info->readfd <= 2);
 }
 
 /**

@@ -2,17 +2,17 @@
 
 /**
  * is_cmd - Checks if a file is excutable.
- * @cmdInfo: Info structure
- * @pat: File path
+ * @info: Info structure
+ * @path: File path
  *
  * Return: 1 if excutable, 0 otherwise
  */
-int is_cmd(cmdInfo_t *cmdInfo, char *pat)
+int is_cmd(info_t *info, char *path)
 {
 	struct stat s;
 
 	(void)cmdInfo;
-	if (!pat || stat(pat, &s))
+	if (!path || stat(path, &s))
 		return (0);
 
 	if (s.s_mode & S_IFREG)
@@ -44,38 +44,38 @@ char *dup_chars(char *pathstrg, int star, int stp)
 
 /**
  * find_path - Locates command in the PATH string
- * @cmdInfo: Info structure
+ * @info: Info structure
  * @pathstrg: PATH string
  * @cmd: the command to locate.
  *
  * Return: Full path of cmd if found or NULL
  */
-char *find_path(cmdInfo_t *cmdInfo, char *pathstrg, char *cmd)
+char *find_path(info_t *info, char *pathstrg, char *cmd)
 {
 	int a = 0, cur_pos = 0;
-	char *pat;
+	char *path;
 
 	if (!pathstrg)
 		return (NULL);
 	if ((_strlen(cmd) > 2) && stars_with(cmd, "./"))
 	{
-		if (is_cmd(cmdInfo, cmd))
+		if (is_cmd(info, cmd))
 			return (cmd);
 	}
 	while (1)
 	{
 		if (!pathstrg[a] || pathstrg[a] == ':')
 		{
-			pat = dup_chars(pathstrg, cur_pos, a);
-			if (!*pat)
-				_strcat(pat, cmd);
+			path = dup_chars(pathstrg, cur_pos, a);
+			if (!*path)
+				_strcat(path, cmd);
 			else
 			{
-				_strcat(pat, "/");
-				_strcat(pat, cmd);
+				_strcat(path, "/");
+				_strcat(path, cmd);
 			}
-			if (is_cmd(cmdInfo, pat))
-				return (pat);
+			if (is_cmd(info, path))
+				return (path);
 			if (!pathstrg[a])
 				break;
 			curr_pos = a;

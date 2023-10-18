@@ -29,18 +29,18 @@ int _erratoi(char *strg)
 
 /**
  * print_error - Outputs an error message
- * @cmdInfo: Parameter & return info struct
+ * @info: Parameter & return info struct
  * @estrg: Specified error message.
  * Return: Converted number if found, 0 otherwise, or -1 on error.
  */
 
-void print_error(cmdInfo_t *cmdInfo, char *estrg)
+void print_error(info_t *info, char *estrg)
 {
-	_eputs(cmdInfo->fname);
+	_eputs(info->fname);
 	_eputs(": ");
-	print_d(cmdInfo->line_count, STDERR_FILENO);
+	print_d(info->line_count, STDERR_FILENO);
 	_eputs(": ");
-	_eputs(cmdInfo->argv[0]);
+	_eputs(info->argv[0]);
 	_eputs(": ");
 	_eputs(estrg);
 }
@@ -48,17 +48,17 @@ void print_error(cmdInfo_t *cmdInfo, char *estrg)
 /**
  * print_d - Prints an integer in base 10.
  * @inp: the integer to print.
- * @fid: File descriptor to write to
+ * @fd: File descriptor to write to
  *
  * Return: Number of characters printed
  */
-int print_d(int inp, int fid)
+int print_d(int inp, int fd)
 {
 	int (*__putchar)(char) = _putchar;
 	int a, count = 0;
 	unsigned int _abs_, current;
 
-	if (fid == STDERR_FILENO)
+	if (fd == STDERR_FILENO)
 		__putchar = _eputchar;
 	if (inp < 0)
 	{
